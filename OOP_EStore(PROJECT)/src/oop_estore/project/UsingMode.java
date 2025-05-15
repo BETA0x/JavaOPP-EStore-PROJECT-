@@ -160,55 +160,70 @@ public class UsingMode {
                         break;
                     }
                     else{
-                        var products = store.getProductsInCategorys(catcho);
+                        ArrayList<Product> products = store.getProductsInCategorys(catcho);
                         if(products.isEmpty()){
                             System.out.println("there is no product in this category");
                             break;
                         }
-                        for(Product p: products){
-                        System.out.println(p.getDetails());
-                        }
-                        System.out.println("Enter product name to add in cart/wilshlist \t\t or '0' to back");
-                        String prodName = scan.nextLine();
-                        
-                        if (prodName.equalsIgnoreCase("0")){
-                            break;
-                        }
-                        else{
-                            System.out.println("Enter '1' to add in Cart \t\t '2' to add in wishlist \t\tor '0' to back");
-                            String cartOrWhis = scan.nextLine();
+                        else {
+                            for(Product p: products){
+                            System.out.println(p.getDetails());
+                            }
                             
-                            if(cartOrWhis.equalsIgnoreCase("1")){
-                                Product found= store.findProduct(prodName);
-                                if(found == null){
-                                    System.out.println("product not found, or wrong input!");
-                                    break;
-                                }
-                    
-                                System.out.println("Enter quantity: \t\t or '0' to cancel");
-                                int quant = scan.nextInt();
-                                scan.nextLine();
-                                if(quant==0){
-                                    break;
-                                }
-                                else if(quant !=0 && quant > found.getStockQuantity()){
-                                    System.out.println("no stock enogh");
-                                    break;
-                                }
-                                else {
-                                    userCart.addProduct(found, quant);
-                                    found.decreaseStock(quant);
-                                    store.saveUsersCarts(cusName, userCart);
-                                    System.out.println("Added to Cart"); 
-                                }
-                            }
-                            else if(cartOrWhis.equalsIgnoreCase("2")){
-                                Product found= store.findProduct(prodName);
-                                store.addToWishList(cusName, found);
-                            }
+                            System.out.println("Enter product name to add in cart/wilshlist \t\t or '0' to back");
+                            String prodName = scan.nextLine();
                         
+                            if (prodName.equalsIgnoreCase("0")){
+                                break;
+                            }
+                            else{
+                                Product prodSelected = null;
+                                for(Product p: products){
+                                    if (p.getName().equalsIgnoreCase(prodName)){
+                                        prodSelected = p;
+                                    }
+                                }
+                                if(prodSelected == null){
+                                    System.out.println("Product didnt found in this Category");
+                                    break;
+                                }
+                                else{
+                                    System.out.println("Enter '1' to add in Cart \t\t '2' to add in wishlist \t\tor '0' to back");
+                                    String cartOrWhis = scan.nextLine();
+                            
+                                    if(cartOrWhis.equalsIgnoreCase("1")){
+                                        Product found= store.findProduct(prodName);
+                                        if(found == null){
+                                            System.out.println("product not found, or wrong input!");
+                                            break;
+                                        } 
+                                        else{
+                                        System.out.println("Enter quantity: \t\t or '0' to cancel");
+                                            int quant = scan.nextInt();
+                                            scan.nextLine();
+                                            if(quant==0){
+                                                break;
+                                            }
+                                            else if(quant !=0 && quant > found.getStockQuantity()){
+                                                System.out.println("no stock enogh");
+                                                break;
+                                            }
+                                            else {
+                                                userCart.addProduct(found, quant);
+                                                found.decreaseStock(quant);
+                                                store.saveUsersCarts(cusName, userCart);
+                                                System.out.println("Added to Cart"); 
+                                            }
+                                        } 
+                                    }
+                                    else if(cartOrWhis.equalsIgnoreCase("2")){
+                                        Product found= store.findProduct(prodName);
+                                        store.addToWishList(cusName, found);
+                                    }
+                                }
                             }
                         }
+                    }
                 } break;
                 
                 case 2: {
@@ -252,10 +267,6 @@ public class UsingMode {
                         System.out.println("Checkout Complete");    
                         }
                     }
-                    
-                    System.out.println("");
-                    
-                    
                 } break;
                 
                 case 3:{
@@ -266,20 +277,25 @@ public class UsingMode {
                         scan.nextLine();
                         switch(wCho){
                             case 1:{
-                                var wishList = store.getUserWhishList(cusName);
+                                ArrayList<Product> wishList = store.getUserWhishList(cusName);
                                 if(wishList.isEmpty()){
                                     System.out.println("your Wish List is empty!");
                                 }
                                 else{
                                     System.out.println("\n Your Wish List:");
                                     for(Product p: wishList){
-                                        System.out.println(p.getDetails() + " | ");
+                                        if(p != null){
+                                            System.out.println(p.getDetails() + " | ");
+                                        }
+                                        else {
+                                            System.out.println("Null entry");
+                                        }
                                     }
                                 }
                             } break;
                             
                             case 2:{
-                                var wishList = store.getUserWhishList(cusName);
+                                ArrayList<Product> wishList = store.getUserWhishList(cusName);
                                 if (wishList.isEmpty()){
                                     System.out.println("your wishlidt is empty");
                                     break;
@@ -290,6 +306,7 @@ public class UsingMode {
                                     Product found = store.findProduct(removeW);
                                     if(found != null){
                                         store.removeFromWishList(cusName, found);
+                                        System.out.println("Product removed");
                                     }
                                     else {
                                         System.out.println("Product didnt exist in whish list!");
