@@ -120,7 +120,7 @@ The main class is turn on the console use main that is in UsingMode; cuz when we
 
 #### }
 
-##Technical Notes:
+## Technical Notes:
 - Lambda used in Cart class "removeIf()" to remove a product based on reference.
 - HashMaps
 - Data stores in memory, no DB or Files i/o.
